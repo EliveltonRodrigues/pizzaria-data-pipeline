@@ -12,3 +12,6 @@ dbt/.user.yml
 docs/screenshots/*
 !docs/screenshots/.gitkeep
 
+
+# Metadados de download do Windows
+*:Zone.Identifier
