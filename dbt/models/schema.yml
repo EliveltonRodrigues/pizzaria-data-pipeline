@@ -1,0 +1,87 @@
+version: 2
+models:
+  - name: stg_clientes
+    columns:
+      - name: cliente_id
+        data_tests: [unique, not_null]
+  - name: stg_produtos
+    columns:
+      - name: produto_id
+        data_tests: [unique, not_null]
+  - name: stg_pedidos
+    columns:
+      - name: pedido_id
+        data_tests: [unique, not_null]
+      - name: cliente_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_clientes')
+                field: cliente_id
+      - name: data_pedido
+        data_tests: [not_null]
+      - name: status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['ENTREGUE', 'CANCELADO']
+  - name: stg_itens
+    columns:
+      - name: item_id
+        data_tests: [unique, not_null]
+      - name: pedido_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_pedidos')
+                field: pedido_id
+      - name: produto_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_produtos')
+                field: produto_id
+      - name: quantidade
+        data_tests: [not_null]
+      - name: preco_unitario
+        data_tests: [not_null]
+  - name: dim_clientes
+    description: "Clientes fictícios, sem nome ou documento pessoal."
+    columns:
+      - name: cliente_id
+        data_tests: [unique, not_null]
+  - name: dim_produtos
+    columns:
+      - name: produto_id
+        data_tests: [unique, not_null]
+  - name: fato_vendas
+    description: "Uma linha por item de pedido entregue; preço histórico do item."
+    columns:
+      - name: item_id
+        data_tests: [unique, not_null]
+      - name: cliente_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_clientes')
+                field: cliente_id
+      - name: produto_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_produtos')
+                field: produto_id
+  - name: faturamento_diario
+    description: "Receita de pedidos entregues, por data do pedido. Ticket por pedido distinto."
+    columns:
+      - name: data_pedido
+        data_tests: [unique, not_null]
+  - name: vendas_por_sabor
+    columns:
+      - name: produto_id
+        data_tests: [unique, not_null]
+

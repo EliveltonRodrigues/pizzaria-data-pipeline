@@ -1,0 +1,5 @@
+# Faixas escolhidas para este projeto didático (Python 3.12).
+# Ambiente separado do Airflow; não instalar no ~/airflow/.venv.
+dbt-core>=1.11,<1.12
+dbt-postgres>=1.11,<1.12
+python-dotenv>=1.0,<2

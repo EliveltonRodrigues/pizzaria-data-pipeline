@@ -1,0 +1,39 @@
+name: Validar pipeline
+on: [push, pull_request]
+jobs:
+  dados-e-dbt:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: estudante
+          POSTGRES_PASSWORD: senha_temporaria_ci
+          POSTGRES_DB: pizzaria
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U estudante -d pizzaria"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: "5432"
+      PGDATABASE: pizzaria
+      PGUSER: estudante
+      PGPASSWORD: senha_temporaria_ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements-lock.txt
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/gerar_dados.py
+      - run: python scripts/carregar_bronze.py
+      - run: python scripts/dbt_local.py build
+      - name: Reexecutar carga e verificar unicidade e reconciliação
+        run: |
+          python scripts/carregar_bronze.py
+          python scripts/dbt_local.py build

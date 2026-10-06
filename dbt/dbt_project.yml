@@ -1,0 +1,16 @@
+name: pizzaria
+version: '1.0.0'
+config-version: 2
+profile: pizzaria
+model-paths: ["models"]
+test-paths: ["tests"]
+clean-targets: ["target", "dbt_packages"]
+models:
+  pizzaria:
+    staging:
+      +schema: silver
+      +materialized: view
+    marts:
+      +schema: gold
+      +materialized: table
+
