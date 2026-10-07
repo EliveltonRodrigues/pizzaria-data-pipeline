@@ -189,6 +189,7 @@ cd ~/projetos/pizzaria-data-pipeline
 bash scripts/iniciar_airflow.sh
 ```
 
+
 O script copia apenas `dags/pizzaria_pipeline.py` para a pasta de DAGs do Airflow existente, define o caminho absoluto do projeto e inicia o Airflow. Execute esse script novamente após editar a DAG.
 
 Abra http://localhost:8080, use seu login existente, procure `pizzaria_pipeline`, ative a DAG e clique em Trigger.
@@ -196,6 +197,9 @@ Abra http://localhost:8080, use seu login existente, procure `pizzaria_pipeline`
 A primeira descoberta pode levar alguns minutos. O fluxo é manual (`schedule=None`), com uma execução ativa por vez e uma retentativa por tarefa.
 
 O PostgreSQL precisa estar iniciado. O terminal do Airflow permanece aberto. Não execute a carga manualmente ao mesmo tempo que a DAG; `max_active_runs` controla apenas execuções desta DAG.
+
+<img width="2550" height="916" alt="image" src="https://github.com/user-attachments/assets/749d8a13-0ad4-4df2-abf0-d963861f956e" />
+
 
 ## Etapa 7 — publicar no seu GitHub pessoal
 
